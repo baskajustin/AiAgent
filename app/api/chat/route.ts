@@ -8,8 +8,11 @@ export async function POST(req: Request) {
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),
-    messages: [{ role: 'system', content: 'You are a helpful AI assistant.' }, ...messages]
+    messages: [
+      { role: 'system', content: 'You are a helpful AI assistant.' },
+      ...messages
+    ]
   });
 
-  return result.toTextStreamResponse();
+  return result.toDataStreamResponse();
 }
