@@ -13,23 +13,38 @@ export default function Home() {
         const newMsg = [...messages, { role: 'user', content: input }];
         setMessages(newMsg);
         setInput('');
-        const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: newMsg }) });
-        const reader = res.body?.getReader();
-        const decoder = new TextDecoder();
-        let text = '';
-        while (reader) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
-            for (const line of lines) {
-                if (line.startsWith('0:')) {
-                    text += line.slice(2).replace(/^"|"$/g, '');
-                    setMessages([...newMsg, { role: 'assistant', content: text }]);
-                }
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: newMsg })
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.error || 'Failed to fetch');
             }
+
+            const reader = res.body?.getReader();
+            const decoder = new TextDecoder();
+            let text = '';
+
+            if (!reader) throw new Error('No reader found');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value);
+                text += chunk;
+                setMessages([...newMsg, { role: 'assistant', content: text }]);
+            }
+        } catch (error) {
+            console.error('Chat error:', error);
+            setMessages([...newMsg, { role: 'assistant', content: `Error: ${error.message}. Check console or .env.local` }]);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
