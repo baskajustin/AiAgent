@@ -1,3 +1,6 @@
-<< 'POSTCSS'
-module.exports = { plugins: { tailwindcss: {}, autoprefixer: {} } };
-POSTCSS
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};

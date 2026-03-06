@@ -1,4 +1,8 @@
-'CONFIG'
 /** @type {import('next').NextConfig} */
-const nextConfig = { experimental: { serverComponentsExternalPackages: ['ai'] } };
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['ai'],
+  },
+};
+
 module.exports = nextConfig;
