@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Action {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  handler     String   // Path or name of the handler function
+  config      String   // JSON configuration
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  scopes      Scope[]
+  logs        Log[]
+}
+
+model Scope {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  parameters  String   // JSON schema for allowed parameters
+  actions     Action[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Log {
+  id         String   @id @default(cuid())
+  actionId   String
+  action     Action   @relation(fields: [actionId], references: [id])
+  status     String   // SUCCESS, FAILED, RUNNING, BLOCKED
+  input      String?  // JSON input (optional)
+  output     String?  // JSON output or error (redacted if sensitive)
+  runtime    Int?     // Execution time in ms
+  replayData String?  // JSON data for UI replay
+  createdAt  DateTime @default(now())
+}

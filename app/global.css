@@ -1,3 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --background: #0a0b10;
+  --foreground: #ffffff;
+  --accent: #0ea5e9;
+}
+
+body {
+  @apply bg-[#0a0b10] text-[#ffffff] min-h-screen selection:bg-brand-500/30 antialiased;
+  font-feature-settings: "cv02", "cv05", "cv11";
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-2xl border border-white/5;
+  }
+
+  .interactive-glass {
+    @apply glass transition-all duration-300 hover:bg-white/10 hover:border-white/20;
+  }
+
+  .chat-bubble-user {
+    @apply bg-brand-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-lg max-w-[85%];
+  }
+
+  .chat-bubble-ai {
+    @apply glass-dark text-white rounded-2xl rounded-tl-none px-4 py-3 shadow-md max-w-[85%];
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  }
+}
+
+.animate-in {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
